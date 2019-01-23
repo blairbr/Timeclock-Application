@@ -1,0 +1,53 @@
+﻿@using Blair_WhenCanIClockOut_2._0.Models
+@model DateTimeModel
+
+<div class="jumbotron">
+	<h1>Timeclock App</h1>
+	<p class="lead">When can I go home?!</p>
+	@using (Ajax.BeginForm("Submit", "Home", new AjaxOptions { OnSuccess = "onSuccess" }, new { Id = "timeclock-form" }))
+	{
+		@Html.LabelFor(model => model.LastPunch)
+		@Html.TextBoxFor(model => model.LastPunch)
+		<br />
+		<br />
+		@Html.LabelFor(model => model.CurrentHours)
+		@Html.TextBoxFor(model => model.CurrentHours)
+		<br />
+		<br />
+		@Html.LabelFor(model => model.DesiredHours);
+		@Html.TextBoxFor(model => model.DesiredHours)
+		<br />
+		<br />
+		<input id="submit-button" type="submit" value="Submit" class="btn-lg btn-success" />
+	}
+</div>
+
+<script>
+
+	function onSuccess(data) {
+		$('#outTimeMessage').html(data);
+	}
+
+	$('#timeclock-form').validate({ // initialize the plugin
+		rules: {
+			LastPunch: {
+				required: true,
+				regex: /\b((1[0-2]|0?[1-9]):([0-5][0-9])([AaPp][Mm]))/
+			},
+			CurrentHours: {
+				required: true,
+				regex: /^(?:100|\d{1,2})(?:\.\d{1,2})?$/
+			},
+			DesiredHours: {
+				required: true,
+				regex: /^(?:100|\d{1,2})(?:\.\d{1,2})?$/
+			}
+		},
+		messages: {
+			LastPunch: "  *Last punch must be in format HH:MMam or HH:MMpm.",
+			CurrentHours: "  *Current Hours must be between 0-100 and contain a max of two decimal points.",
+			DesiredHours: "  *Desired Hours must be between 0-100 and contain a max of two decimal points."
+		}
+	});
+
+</script>
